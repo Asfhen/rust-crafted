@@ -1,6 +1,6 @@
 use crate::common::{
     error::{GameError, InvalidData},
-    U32Position,
+    world::position::Position,
 };
 use bevy::ecs::{component::Component, resource::Resource};
 use serde::{Deserialize, Serialize};
@@ -14,10 +14,10 @@ pub struct BlockType {
 }
 
 impl BlockType {
-    pub fn new(namespace: String, block_name: String, block_variant: Option<String>) -> Self {
+    pub fn new(namespace: &str, block_name: &str, block_variant: Option<String>) -> Self {
         BlockType {
-            namespace,
-            block_name,
+            namespace: namespace.to_string(),
+            block_name: block_name.to_string(),
             block_variant,
         }
     }
@@ -37,13 +37,13 @@ impl TryFrom<&str> for BlockType {
         let parts: Vec<&str> = value.split("::").collect();
         match parts.len() {
             2 => Ok(BlockType::new(
-                parts[0].to_string(),
-                parts[1].to_string(),
+                parts[0],
+                parts[1],
                 None,
             )),
             3 => Ok(BlockType::new(
-                parts[0].to_string(),
-                parts[1].to_string(),
+                parts[0],
+                parts[1],
                 Some(parts[2].to_string()),
             )),
             _ => Err(GameError::InvalidData(InvalidData::BlockIdentifier(
@@ -57,12 +57,20 @@ impl TryFrom<&str> for BlockType {
 pub struct BlockProperties {
     pub solid: bool,
     pub transparent: bool,
-    pub light_emission: u8,
+    pub light_emission: Option<u8>,
+    pub emission_color: Option<(u8, u8, u8)>,
     pub blast_resistance: f32,
     pub hardness: f32,
     pub texture_faces: [String; 6],
     pub model: Option<String>,
     pub custom_data: HashMap<String, String>,
+}
+
+#[derive(Component)]
+pub struct WorldBlock {
+    pub block_type: Option<BlockType>,
+    pub position: Position,
+    pub light_level: u8,
 }
 
 #[derive(Resource, Default, Serialize, Deserialize)]
@@ -79,11 +87,20 @@ impl BlockRegistry {
     pub fn get_properties(&self, block_type: &BlockType) -> Option<&BlockProperties> {
         self.block_types.get(&block_type.to_identifier())
     }
-}
 
-#[derive(Component, Default)]
-pub struct WorldBlock {
-    pub block_type: Option<BlockType>,
-    pub position: U32Position,
-    pub light_level: u8,
+    pub fn is_solid(&self, block_type: &BlockType) -> bool {
+        self.get_properties(block_type).map(|p| p.solid).unwrap()
+    }
+
+    pub fn is_transparent(&self, block_type: &BlockType) -> bool {
+        self.get_properties(block_type).map(|p| p.transparent).unwrap()
+    }
+
+    pub fn get_light_emission(&self, block_type: &BlockType) -> Option<u8> {
+        self.get_properties(block_type).and_then(|p| p.light_emission)
+    }
+
+    pub fn get_emission_color(&self, block_type: &BlockType) -> Option<(u8, u8, u8)> {
+        self.get_properties(block_type).and_then(|p| p.emission_color)
+    }
 }
