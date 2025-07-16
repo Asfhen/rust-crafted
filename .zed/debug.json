@@ -1,0 +1,56 @@
+[
+    {
+        "label": "Debug executable 'client'",
+        "adapter": "CodeLLDB",
+        "request": "launch",
+        "build": {
+            "label": "Cargo build 'client'",
+            "command": "cargo build",
+            "args": ["--package=rust-crafted", "--bin=client"],
+            "hide": "on_success",
+            "reveal": "no_focus",
+            "show_command": true,
+            "allow_concurrent_runs": false,
+            "tags": ["build", "client"],
+            "reveal_target": "dock",
+            "show_summary": true,
+            "use_new_terminal": true,
+            "env": {
+                "RUST_BACKTRACE": "1",
+                "RUST_LOG": "debug",
+                "BEVY_ASSET_ROOT": "$ZED_WORKTREE_ROOT/assets"
+            },
+            "shell": {
+                "program": "nu"
+            }
+        },
+        "program": "$ZED_WORKTREE_ROOT/target/debug/client"
+    },
+    {
+        "label": "Debug executable 'server'",
+        "adapter": "CodeLLDB",
+        "request": "launch",
+        "build": {
+            "label": "Cargo build 'server'",
+            "command": "cargo build",
+            "args": ["--package=rust-crafted", "--bin=server"],
+            "hide": "on_success",
+            "reveal": "no_focus",
+            "show_command": true,
+            "allow_concurrent_runs": false,
+            "tags": ["build", "server"],
+            "reveal_target": "dock",
+            "show_summary": true,
+            "use_new_terminal": true,
+            "env": {
+                "RUST_BACKTRACE": "1",
+                "RUST_LOG": "debug",
+                "BEVY_ASSET_ROOT": "$ZED_WORKTREE_ROOT/assets"
+            },
+            "shell": {
+                "program": "nu"
+            }
+        },
+        "program": "$ZED_WORKTREE_ROOT/target/debug/server"
+    }
+]
