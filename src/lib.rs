@@ -1,12 +1,12 @@
 use bevy::math::{ivec2, IVec2, IVec3};
 
-pub const CHUNK_SIZE: i32 = 32;
-pub const CHUNK_HEIGHT: i32 = 256;
-pub const CHUNK_SIZE_P: i32 = CHUNK_SIZE + 2;
-pub const CHUNK_SIZE_P2: i32 = CHUNK_SIZE_P * CHUNK_SIZE_P;
-pub const CHUNK_SIZE_P3: i32 = CHUNK_SIZE_P * CHUNK_SIZE_P * CHUNK_SIZE_P;
-pub const CHUNK_SIZE2: i32 = CHUNK_SIZE * CHUNK_SIZE;
-pub const CHUNK_SIZE3: i32 = CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE;
+pub const CHUNK_SIZE: usize = 32;
+pub const CHUNK_HEIGHT: usize = 256;
+pub const CHUNK_SIZE_P: usize = CHUNK_SIZE + 2;
+pub const CHUNK_SIZE_P2: usize = CHUNK_SIZE_P * CHUNK_SIZE_P;
+pub const CHUNK_SIZE_P3: usize = CHUNK_SIZE_P * CHUNK_SIZE_P * CHUNK_SIZE_P;
+pub const CHUNK_SIZE2: usize = CHUNK_SIZE * CHUNK_SIZE;
+pub const CHUNK_SIZE3: usize = CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE;
 
 pub const ADJACENT_CHUNK_DIRECTIONS: [IVec3; 27] = [
     IVec3 { x: 0, y: 0, z: 0 },
