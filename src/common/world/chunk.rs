@@ -14,7 +14,7 @@ type ChunkCoords = (i32, i32);
 #[derive(Component)]
 pub struct Chunk {
     pub position: ChunkCoords,
-    pub blocks: Vec<WorldBlock>,
+    pub blocks: HashMap<(usize, usize, usize), WorldBlock>,
 }
 
 #[derive(Component)]
@@ -35,7 +35,7 @@ impl Chunk {
     /// Get block safely and return None if out of bounds
     pub fn get_block(&self, x: usize, y: usize, z: usize) -> Option<&WorldBlock> {
         if x < CHUNK_SIZE && y < CHUNK_HEIGHT && z < CHUNK_SIZE {
-            Some(&self.blocks[block_index(x, y, z)])
+            Some(&self.blocks.get(&(x, y, z)).unwrap())
         } else {
             None
         }
@@ -44,7 +44,8 @@ impl Chunk {
     /// Get mutable block reference
     pub fn get_block_mut(&mut self, x: usize, y: usize, z: usize) -> Option<&mut WorldBlock> {
         if x < CHUNK_SIZE && y < CHUNK_HEIGHT && z < CHUNK_SIZE {
-            Some(&mut self.blocks[block_index(x, y, z)])
+            let coords = (x, y, z);
+            Some(self.blocks.get_mut(&coords).unwrap())
         } else {
             None
         }
@@ -110,8 +111,8 @@ fn spawn_chunk(commands: &mut Commands, position: ChunkCoords, noise: &WorldNois
         .id()
 }
 
-fn generate_terrain(position: ChunkCoords, noise: &WorldNoise) -> Vec<WorldBlock> {
-    let mut blocks = Vec::<WorldBlock>::with_capacity(TOTAL_BLOCKS);
+fn generate_terrain(position: ChunkCoords, noise: &WorldNoise) -> HashMap<(usize, usize, usize), WorldBlock> {
+    let mut blocks: HashMap<(usize, usize, usize), WorldBlock> = HashMap::with_capacity(TOTAL_BLOCKS);
 
     for x in 0..CHUNK_SIZE {
         for z in 0..CHUNK_SIZE {
@@ -123,9 +124,9 @@ fn generate_terrain(position: ChunkCoords, noise: &WorldNoise) -> Vec<WorldBlock
                 + 64.0) as usize;
 
             for y in 0..CHUNK_HEIGHT {
-                let idx = block_index(x, y, z);
-
-                blocks[idx] = WorldBlock {
+                let _idx = block_index(x, y, z);
+                
+                let block = WorldBlock {
                     block_type: if y == 0 {
                         Some(BlockType::new("rust_crafted", "bedrock", None))
                     } else if y < height.saturating_sub(3) {
@@ -142,6 +143,7 @@ fn generate_terrain(position: ChunkCoords, noise: &WorldNoise) -> Vec<WorldBlock
                     position: Position::new(x as i32, y as i32, z as i32),
                     light_level: if y > height { 15 } else { 0 },
                 };
+                blocks.insert((x, y, z), block);
             }
         }
     }
