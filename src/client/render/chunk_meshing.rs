@@ -3,7 +3,7 @@ use bevy::{
     prelude::*,
     render::mesh::{Indices, Mesh, PrimitiveTopology, VertexAttributeValues},
 };
-use voxel_engine::{common::world::{block::BlockRegistry, chunk::{Chunk, ChunkNeedsMeshing}}, CHUNK_HEIGHT, CHUNK_SIZE};
+use voxel_engine::{common::world::{block::BlockRegistry, chunk::{block_index, Chunk, ChunkNeedsMeshing}}, CHUNK_HEIGHT, CHUNK_SIZE};
 
 pub fn chunk_mesh_system(
     mut commands: Commands,
@@ -43,7 +43,8 @@ pub fn generate_chunk_mesh(chunk: &Chunk, block_registry: &BlockRegistry) -> Mes
     for x in 0..CHUNK_SIZE as usize {
         for y in 0..CHUNK_HEIGHT as usize {
             for z in 0..CHUNK_SIZE as usize {
-                let block = &chunk.blocks[x][y][z];
+                let block_idx = block_index(x, y, z);
+                let block = &chunk.blocks[block_idx];
 
                 if block.block_type.is_none() {
                     continue; // Skip empty blocks
@@ -60,7 +61,8 @@ pub fn generate_chunk_mesh(chunk: &Chunk, block_registry: &BlockRegistry) -> Mes
 
                 for (face_idx, &(nx, ny, nz)) in neighbors.iter().enumerate() {
                     let is_visible = if nx < CHUNK_SIZE && ny < CHUNK_HEIGHT && nz < CHUNK_SIZE {
-                        chunk.blocks[nx][ny][nz].block_type.is_none()
+                        let neighbor_idx = block_index(nx, ny, nz);
+                        chunk.blocks[neighbor_idx].block_type.is_none()
                     } else {
                         true
                     };
@@ -87,6 +89,34 @@ pub fn generate_chunk_mesh(chunk: &Chunk, block_registry: &BlockRegistry) -> Mes
     mesh.insert_indices(Indices::U32(indices));
 
     mesh
+}
+
+fn is_visible(
+    chunk: &Chunk,
+    x: usize,
+    y: usize,
+    z: usize,
+    face: usize
+) -> bool {
+    let (nx, ny, nz) = match face {
+        0 => (x + 1, y, z),     // Direita
+        1 => (x.wrapping_sub(1), y, z), // Esquerda
+        2 => (x, y + 1, z),     // Topo
+        3 => (x, y.wrapping_sub(1), z), // Base
+        4 => (x, y, z + 1),     // Frente
+        5 => (x, y, z.wrapping_sub(1)), // Trás
+        _ => return true,
+    };
+
+    // Verificação de limites rigorosa
+    if nx >= CHUNK_SIZE || ny >= CHUNK_HEIGHT || nz >= CHUNK_SIZE {
+        return true;
+    }
+
+    let idx = block_index(nx, ny, nz);
+    chunk.blocks.get(idx)
+        .map(|b| b.block_type.is_none())
+        .unwrap_or(true)
 }
 
 fn add_block_face(
