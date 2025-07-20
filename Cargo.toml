@@ -53,6 +53,8 @@ bevy_rapier3d = "0.30.0"
 bevy_renet = { version = "1.0.0", features = ["steam", "netcode"] }
 bevy_screen_diagnostics = "0.8.1"
 bincode = "2.0.1"
+bitflags = "2.9.1"
+block-mesh = "0.2.0"
 chrono = "0.4.39"
 config = "0.15.8"
 futures-lite = "2.6.0"
