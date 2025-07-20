@@ -1,5 +1,6 @@
 pub mod components;
 pub mod generation;
+pub mod storage;
 pub mod world;
 
 pub mod error;
