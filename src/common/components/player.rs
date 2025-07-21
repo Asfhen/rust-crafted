@@ -1,5 +1,4 @@
 use bevy::prelude::*;
-use ilattice::glam::UVec3;
 
 #[derive(Component, Default)]
 pub struct Player;

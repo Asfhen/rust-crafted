@@ -20,6 +20,7 @@ pub struct MaterialRegistryInfo {
     pub reflectance: f32,
 }
 
+
 pub trait BlockMaterial {
     /// Namespace for the owner of the block. default: rust_crafted
     fn namespace() -> &'static str {

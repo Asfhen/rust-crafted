@@ -61,11 +61,11 @@ impl MergeVoxel for Block {
     }
 }
 
-pub trait BlockMaterial: MergeVoxel + Voxel {
+pub trait MaterialBlock: MergeVoxel + Voxel {
     fn as_mat_id(&self) -> u64;
 }
 
-impl BlockMaterial for Block {
+impl MaterialBlock for Block {
     fn as_mat_id(&self) -> u64 {
         self.0 & !Block::TRANSPARENT_FLAG
     }

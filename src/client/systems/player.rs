@@ -1,6 +1,5 @@
 use std::f32::consts::FRAC_PI_2;
 use bevy::{input::mouse::MouseMotion, prelude::*, window::CursorGrabMode};
-use bevy_egui::EguiContexts;
 
 pub const DEFAULT_CAMERA_SENS: f32 = 0.005;
 
