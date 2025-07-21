@@ -1,25 +1,41 @@
 use bevy::prelude::*;
 use ilattice::glam::UVec3;
 
+#[derive(Component, Default)]
+pub struct Player;
+
 #[derive(Component)]
-pub struct PlayerData {
-    pub username: String,
-    pub health: i64,
-    pub world_position: UVec3,
-    pub jump_strength: f32,
-    pub movement_speed: f32,
-    pub is_on_ground: bool,
+pub struct DisplayName(pub String);
+
+#[derive(Component)]
+pub struct Health {
+    pub current: u8,
+    pub max: u8,
 }
 
-impl Default for Player {
-    fn default() -> Self {
-        Player {
-            health: 20,
-            username: "player".to_string(),
-            world_position: UVec3::new(0, 0, 0),
-            jump_strength: 7.0,
-            movement_speed: 5.0,
-            is_on_ground: false,
+impl Health {
+    pub fn new(max_health: u8) -> Self {
+        Self {
+            current: max_health,
+            max: max_health,
         }
     }
+
+    pub fn damage(&mut self, d: u8) {
+        self.current -= d;
+    }
+
+    pub fn heal(&mut self, h: u8) {
+        self.current += h;
+    }
+}
+
+#[derive(Bundle)]
+pub struct PlayerBundle {
+    pub player: Player,
+    pub name: DisplayName,
+    pub health: Health,
+
+    pub transform: Transform,
+    pub global_transform: GlobalTransform,
 }
