@@ -3,10 +3,8 @@ use bevy::{
     prelude::{Color, Plugin, Resource},
 };
 use bitflags::bitflags;
-use std::any::{type_name, TypeId};
+use std::any::TypeId;
 use tracing::info;
-
-use super::Block;
 
 #[derive(Default)]
 pub struct MaterialRegistryInfo {
