@@ -6,6 +6,8 @@ use bitflags::bitflags;
 use std::any::TypeId;
 use tracing::info;
 
+use crate::Block;
+
 #[derive(Default)]
 pub struct MaterialRegistryInfo {
     pub id: &'static str,
@@ -22,6 +24,8 @@ pub struct MaterialRegistryInfo {
 
 
 pub trait BlockMaterial {
+    const ID: u64;
+
     /// Namespace for the owner of the block. default: rust_crafted
     fn namespace() -> &'static str {
         "rust_crafted"
@@ -53,6 +57,10 @@ pub trait BlockMaterial {
             None => format!("{}::{}", Self::namespace(), Self::block_name()),
         }
     }
+
+    fn into_block() -> Block {
+        Block(Self::ID)
+    }
 }
 
 /// Defines a new block material type with optional property overrides.
@@ -76,10 +84,11 @@ pub trait BlockMaterial {
 /// ```
 #[macro_export]
 macro_rules! block_material {
-    ($type_name:ident { $($field:ident: $value:expr),* $(,)? }) => {
+    ($type_name:ident { $($field:ident: $value:expr),* $(,)? }, $id: expr) => {
         pub struct $type_name;
 
         impl $crate::common::world::material::BlockMaterial for $type_name {
+            const ID: u64 = $id;
             $(
                 $crate::__block_material_fn!($field: $value);
             )*
@@ -247,7 +256,7 @@ block_material!(Air {
     block_name: "air",
     base_color: Color::NONE,
     flags: BlockMaterialFlags::TRANSPARENT,
-});
+}, 0);
 
 pub struct BlockMaterialPlugin;
 impl Plugin for BlockMaterialPlugin {

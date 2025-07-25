@@ -7,7 +7,7 @@ use bevy::{
     math::Vec3,
     platform::collections::HashMap,
 };
-use bevy_renet::renet::{ChannelConfig, ClientId};
+use bevy_renet::renet::{ChannelConfig, ClientId, SendType};
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 
@@ -32,20 +32,20 @@ impl Default for NetworkConfig {
                 ChannelConfig {
                     channel_id: 0,
                     max_memory_usage_bytes: 1024 * 1024 * 5,
-                    send_type: renet::SendType::ReliableOrdered {
+                    send_type: SendType::ReliableOrdered {
                         resend_time: Duration::from_millis(300),
                     },
                 },
                 ChannelConfig {
                     channel_id: 1,
                     max_memory_usage_bytes: 1024 * 1024 * 2,
-                    send_type: renet::SendType::Unreliable,
+                    send_type: SendType::Unreliable,
                 },
             ],
             client_config: vec![ChannelConfig {
                 channel_id: 0,
                 max_memory_usage_bytes: 1024 * 1024 * 5,
-                send_type: renet::SendType::ReliableOrdered {
+                send_type: SendType::ReliableOrdered {
                     resend_time: Duration::from_millis(300),
                 },
             }],

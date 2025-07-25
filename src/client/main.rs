@@ -5,7 +5,7 @@
 use bevy::{log::LogPlugin, prelude::*};
 use bevy_rapier3d::plugin::{NoUserData, RapierPhysicsPlugin};
 use voxel_engine::common::{
-    generation::noise::WorldNoise,
+    // generation::noise::WorldNoise,
     logging::setup_file_logging,
     // world::{
     //     block::BlockRegistry,
@@ -21,7 +21,7 @@ mod systems;
 fn main() {
     let _guard = setup_file_logging();
     App::new()
-        .insert_resource(WorldNoise::default())
+        // .insert_resource(WorldNoise::default())
         .add_plugins((
             DefaultPlugins.build().disable::<LogPlugin>(),
             RapierPhysicsPlugin::<NoUserData>::default(),

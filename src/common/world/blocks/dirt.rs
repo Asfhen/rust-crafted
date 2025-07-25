@@ -4,6 +4,8 @@ use crate::common::world::material::{BlockMaterial, BlockMaterialFlags};
 pub struct Dirt;
 
 impl BlockMaterial for Dirt {
+    const ID: u64 = 2;
+
     fn namespace() -> &'static str { "rust_crafted" }
     fn block_name() -> &'static str { "dirt" }
     fn variant() -> Option<&'static str> { None }

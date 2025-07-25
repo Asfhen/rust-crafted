@@ -9,3 +9,6 @@ pub use chunk::*;
 
 pub mod material;
 pub use material::*;
+
+pub mod terrain;
+pub use terrain::*;
