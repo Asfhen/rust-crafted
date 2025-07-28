@@ -5399,6 +5399,7 @@ dependencies = [
  "serde",
  "serde_json",
  "thiserror 2.0.12",
+ "thread_local",
  "tracing",
  "tracing-appender",
  "tracing-subscriber",

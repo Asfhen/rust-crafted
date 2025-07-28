@@ -1,11 +1,9 @@
-use ilattice::{morton::Morton3i32, vector::Map as VecMap};
-use std::{collections::BTreeMap, hash::Hash};
-
-use bevy::{math::IVec3, prelude::Resource};
-use ndshape::Shape;
-
-use crate::CHUNK_SIZE;
 use super::buffer::BlockBuffer;
+use crate::CHUNK_SIZE;
+use bevy::{math::IVec3, prelude::Resource};
+use ilattice::{morton::Morton3i32, vector::Map as VecMap};
+use ndshape::Shape;
+use std::{collections::BTreeMap, hash::Hash};
 
 /// Provides an interface to query or modify block data for worlds or scenes split into multiple
 /// block data buffers of the same shape with no level of detail
@@ -112,4 +110,3 @@ where
         self.shape_mask
     }
 }
-

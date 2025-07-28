@@ -1,10 +1,8 @@
 use crate::{Block, ChunkMap, Player, CHUNK_HEIGHT, CHUNK_SIZE};
 use bevy::{
-    ecs::{
-        component::Component, entity::Entity, query::{Changed, With}, resource::Resource, schedule::SystemSet, system::{Commands, Query, Res, ResMut}
-    },
-    math::{FloatOrd, IVec3},
-    platform::collections::{HashMap, HashSet}, transform::components::GlobalTransform,
+    app::{Last, Plugin, PostUpdate, Update}, ecs::{
+        component::Component, entity::Entity, query::{Changed, With}, resource::Resource, schedule::{IntoScheduleConfigs, SystemSet}, system::{Commands, Query, Res, ResMut}
+    }, math::{FloatOrd, IVec3}, platform::collections::{HashMap, HashSet}, transform::components::GlobalTransform
 };
 use ndshape::ConstShape3u32;
 
@@ -89,6 +87,33 @@ impl ChunkCommandQueue {
 /// Label for the stage housing the chunk loading systems.
 #[derive(PartialEq, Eq, PartialOrd, Ord, Clone, Copy, Debug, Hash, SystemSet)]
 pub struct ChunkLoadingSet;
+
+pub struct ChunkingPlugin;
+
+impl Plugin for ChunkingPlugin {
+    fn build(&self, app: &mut bevy::app::App) {
+        app.insert_resource::<ChunkLoadRadius>(ChunkLoadRadius {
+            horizontal: 16,
+            vertical: 6,
+        })
+        .init_resource::<ChunkEntities>()
+        .insert_resource(CurrentLocalPlayer {
+            chunk_min: IVec3::ZERO,
+            world_pos: IVec3::ZERO,
+        })
+        .init_resource::<ChunkCommandQueue>()
+        .init_resource::<DirtyChunks>()
+        .configure_sets(Update, ChunkLoadingSet)
+        .add_systems(
+            Update,
+            (update_player_pos, update_view_chunks, create_chunks)
+                .chain()
+                .in_set(ChunkLoadingSet)
+        )
+        .add_systems(PostUpdate, destroy_chunks)
+        .add_systems(Last, clear_dirty);
+    }
+}
 
 fn update_view_chunks(
     player_pos: Res<CurrentLocalPlayer>,
