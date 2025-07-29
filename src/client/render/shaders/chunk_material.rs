@@ -3,12 +3,10 @@ use bevy::{
     asset::{Asset, Assets, Handle},
     color::{Color, LinearRgba},
     ecs::{
-        change_detection::DetectChanges,
         component::Component,
-        entity::Entity,
         resource::Resource,
         schedule::{common_conditions::resource_changed, IntoScheduleConfigs, SystemSet},
-        system::{Commands, Query, Res, ResMut},
+        system::{Commands, Res, ResMut},
         world::FromWorld,
     },
     pbr::{Material, MaterialPlugin},
@@ -21,7 +19,7 @@ use bevy::{
     },
     utils::default,
 };
-use voxel_engine::{material, BlockMaterialRegistry};
+use voxel_engine::BlockMaterialRegistry;
 
 #[derive(Component, Clone, Default, ExtractComponent)]
 pub struct BlockTerrainMesh;

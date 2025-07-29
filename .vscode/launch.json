@@ -13,21 +13,15 @@
                 "filter": {
                     "name": "client",
                     "kind": "bin"
-                },
-                "env": {
-                    "LD_LIBRARY_PATH": "${workspaceFolder}/target/debug/deps:${env:HOME}/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib",
-                    "RUST_BACKTRACE": "1",
-                    "RUST_LOG": "debug",
-                    "BEVY_ASSET_ROOT": "${workspaceFolder}/assets"
                 }
             },
             "args": [],
             "cwd": "${workspaceFolder}",
             "env": {
-                "LD_LIBRARY_PATH": "${workspaceFolder}/target/debug/deps:${env:HOME}/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib",
-                "RUST_BACKTRACE": "1",
+                // "LD_LIBRARY_PATH": "${workspaceFolder}/target/debug/deps:${env:HOME}/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib",
+                "RUST_BACKTRACE": "full",
                 "RUST_LOG": "debug",
-                "BEVY_ASSET_ROOT": "${workspaceFolder}/assets"
+                "BEVY_ASSET_ROOT": "${workspaceFolder}"
             }
         },
         {
