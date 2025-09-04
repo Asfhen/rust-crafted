@@ -1,0 +1,57 @@
+[package]
+name = "rust-crafted"
+version = "0.1.0"
+edition = "2021"
+authors = ["Asfhen"]
+description = "A voxel-based sandbox game using Bevy and Renet"
+license = "GPL-3.0-or-later"
+repository = "https://github.com/Asfhen/rust-crafted"
+homepage = "https://github.com/Asfhen/rust-crafted"
+readme = "README.md"
+categories = ["games"]
+keywords = ["game", "voxel", "sandbox", "bevy", "renet"]
+
+[[bin]]
+name = "client"
+path = "src/client/main.rs"
+
+[[bin]]
+name = "server"
+path = "src/server/main.rs"
+
+[lib]
+name = "voxel_engine"
+path = "src/lib/lib.rs"
+
+[profile.dev]
+opt-level = 1
+
+[profile.release]
+opt-level = "s"
+codegen-units = 1
+lto = "thin"
+
+# for Linux
+[target.x86_64-unknown-linux-gnu]
+linker = "clang"
+rustflags = [
+    "-C",
+    "link-arg=-fuse-ld=lld",
+    "-C",
+    "target-cpu=native",
+    "-C",
+    "target-feature=+crt-static",
+]
+
+# for Windows
+[target.x86_64-pc-windows-msvc]
+linker = "rust-lld.exe"
+
+[dependencies]
+bevy = { version = "0.16.1", features = ["trace", "bevy_remote", "multi_threaded"] }
+bincode = "2.0.1"
+chrono = "0.4.41"
+thiserror = "2.0.12"
+tracing = "0.1.41"
+tracing-appender = "0.2.3"
+tracing-subscriber = { version = "0.3.19", features = ["registry", "fmt"] }
